@@ -29,17 +29,25 @@ export function partialPost(postId: string): CapturedPost {
   };
 }
 
-/** 画面に出ている投稿の枠から、読める範囲で投稿を読む（通信データが無いときの予備） */
+/** 投稿の枠の中で、引用元（role="link" の箱）に入っていない要素だけ */
+function ownElements(article: Element, selector: string): Element[] {
+  return [...article.querySelectorAll(selector)].filter((el) => el.closest('[role="link"]') === null);
+}
+
+/**
+ * 画面に出ている投稿の枠から、読める範囲で投稿を読む（通信データが無いときの予備）。
+ * リンク・引用・投稿者 ID が欠けるので partial とし、通信データが来たら上書きされる
+ */
 export function readPostFromArticle(article: Element, postId: string): CapturedPost {
   const handle = article.querySelector(`a[href*="/status/${postId}"]`)?.getAttribute("href")?.split("/")[1] ?? "";
   if (!handle || handle === "i") return partialPost(postId);
-  const textEl = article.querySelector('[data-testid="tweetText"]');
+  const textEl = ownElements(article, '[data-testid="tweetText"]')[0];
   const time = article.querySelector("time")?.getAttribute("datetime");
   const postedAt = time && !Number.isNaN(Date.parse(time)) ? new Date(time).toISOString() : (snowflakeToIso(postId) ?? "");
   const hashtags = [...(textEl?.querySelectorAll('a[href^="/hashtag/"]') ?? [])]
     .map((a) => (a.textContent ?? "").replace(/^[#＃]/, ""))
     .filter((h) => h !== "");
-  const media: MediaItem[] = [...article.querySelectorAll('img[src*="pbs.twimg.com/media/"]')].map((img) => {
+  const media: MediaItem[] = ownElements(article, 'img[src*="pbs.twimg.com/media/"]').map((img) => {
     const src = img.getAttribute("src") ?? "";
     return { type: "photo", url: src, thumbUrl: src };
   });
@@ -57,5 +65,6 @@ export function readPostFromArticle(article: Element, postId: string): CapturedP
     media,
     links: [],
     hashtags,
+    partial: true,
   };
 }

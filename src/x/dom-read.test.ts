@@ -18,7 +18,7 @@ beforeEach(() => {
       <div data-testid="tweetText"><span>すごい</span> <a href="/hashtag/推し活">#推し活</a></div>
       <img src="https://pbs.twimg.com/media/P1?format=jpg&name=small">
       <div role="group"><button data-testid="bookmark"><svg><path></path></svg></button></div>
-      <div class="quoted"><a href="/carol/status/1973000000000000399">引用</a></div>
+      <div role="link"><a href="/carol/status/1973000000000000399"><time datetime="2026-08-01T00:00:00.000Z">8月1日</time></a><div data-testid="tweetText">引用元の本文</div><img src="https://pbs.twimg.com/media/Q1?format=jpg&name=small"></div>
     </article>
     <article data-testid="tweet"><div>ID の分からない投稿</div></article>`;
 });
@@ -50,7 +50,15 @@ describe("readPostFromArticle", () => {
       media: [{ type: "photo", url: "https://pbs.twimg.com/media/P1?format=jpg&name=small", thumbUrl: "https://pbs.twimg.com/media/P1?format=jpg&name=small" }],
       links: [],
       hashtags: ["推し活"],
+      partial: true,
     });
+  });
+  it("本文の無い投稿で、引用元の本文や画像を自分のものとして取らない", () => {
+    document.body.innerHTML = `<article><a href="/alice/status/${ID}"><time datetime="2026-09-01T10:00:00.000Z">x</time></a>
+      <div role="link"><div data-testid="tweetText">引用元の本文</div><img src="https://pbs.twimg.com/media/Q1"></div></article>`;
+    const p = readPostFromArticle(article(0), ID);
+    expect(p.text).toBe("");
+    expect(p.media).toEqual([]);
   });
   it("読めなければ ID と URL だけの投稿にする", () => {
     expect(readPostFromArticle(article(1), ID)).toEqual(partialPost(ID));

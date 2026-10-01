@@ -39,6 +39,12 @@ describe("PostCard", () => {
     expect(screen.getByText("中身は、X のブックマーク画面を開くと入ります")).toBeTruthy();
   });
 
+  it("中身が一部だけのときは、読めた本文と案内の両方を出す", () => {
+    render(<PostCard post={makePost({ partial: true, text: "読めた本文" })} folders={folders} />);
+    expect(screen.getByText("読めた本文")).toBeTruthy();
+    expect(screen.getByText("中身は、X のブックマーク画面を開くと入ります")).toBeTruthy();
+  });
+
   it("選ぶチェックを押すと知らせる", () => {
     const onSelect = vi.fn();
     render(<PostCard post={makePost()} folders={folders} selected={false} onSelect={onSelect} />);

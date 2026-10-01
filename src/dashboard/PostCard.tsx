@@ -37,11 +37,8 @@ export function PostCard({ post, folders, selected, onSelect, children }: Props)
               <span className="rounded bg-stone-200 px-1.5 text-xs dark:bg-stone-700">{t("post.removed")}</span>
             )}
           </div>
-          {post.partial ? (
-            <p className="mt-1 text-sm text-stone-500">{t("post.partial")}</p>
-          ) : (
-            <p className="mt-1 whitespace-pre-wrap break-words">{post.text}</p>
-          )}
+          {post.text && <p className="mt-1 whitespace-pre-wrap break-words">{post.text}</p>}
+          {post.partial && <p className="mt-1 text-sm text-stone-500">{t("post.partial")}</p>}
           {post.quoted && (
             <blockquote className="mt-2 rounded-lg border-l-4 border-amber-300 bg-amber-50 px-3 py-2 text-sm dark:border-stone-600 dark:bg-stone-900">
               <span className="text-stone-500">{t("post.quoted", { handle: post.quoted.authorHandle })}</span>
