@@ -5,7 +5,8 @@
 ## 今やっていること
 
 - [x] 計画1：土台と中核（`docs/superpowers/plans/2026-10-02-twittana-a-foundation.md`）
-- [ ] 計画2：X からの取り込み（`docs/superpowers/plans/2026-10-02-twittana-b-capture.md`）
+- [x] 計画2：X からの取り込み（`docs/superpowers/plans/2026-10-02-twittana-b-capture.md`）
+- [ ] 計画2の手での確認（`docs/manual-test.md` の「取り込み」）。実際の X アカウントが要るのでユーザーが行う
 - [ ] 計画3：本棚画面
 - [ ] 計画4：AI 分類・言語・公開準備
 
