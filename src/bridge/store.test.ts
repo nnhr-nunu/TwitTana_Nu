@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { anchorFromRect, createStore, PICKER_HEIGHT, PICKER_WIDTH } from "./store";
+import { anchorFromRect, createStore, PICKER_HEIGHT, PICKER_WIDTH, withPickerSelection } from "./store";
 
 describe("createStore", () => {
   it("更新すると購読者に知らせる。解除後は知らせない", () => {
@@ -26,5 +26,14 @@ describe("anchorFromRect", () => {
   it("画面の左右の端からはみ出さない", () => {
     expect(anchorFromRect({ top: 100, bottom: 130, left: 10 }, viewport).left).toBe(8);
     expect(anchorFromRect({ top: 100, bottom: 130, left: 1190 }, viewport).left).toBe(1200 - PICKER_WIDTH - 8);
+  });
+});
+
+describe("withPickerSelection", () => {
+  const state = { picker: { postId: "B", anchor: null, folders: [], selected: ["x"] }, counter: null };
+  it("今開いているメニューの投稿のときだけ反映する", () => {
+    expect(withPickerSelection(state, "B", ["y"]).picker?.selected).toEqual(["y"]);
+    expect(withPickerSelection(state, "A", ["y"])).toBe(state);
+    expect(withPickerSelection({ picker: null, counter: null }, "B", ["y"]).picker).toBeNull();
   });
 });
