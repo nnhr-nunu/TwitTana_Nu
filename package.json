@@ -3,6 +3,7 @@
   "description": "Twitter（現 X）のブックマークをフォルダ整理する Chrome 拡張（非公式）",
   "private": true,
   "version": "0.1.0",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "wxt",
