@@ -4,11 +4,9 @@
 
 ## 今やっていること
 
-- [x] 計画1：土台と中核（`docs/superpowers/plans/2026-10-02-twittana-a-foundation.md`）
-- [x] 計画2：X からの取り込み（`docs/superpowers/plans/2026-10-02-twittana-b-capture.md`）
-- [ ] 計画2・3の手での確認（docs/manual-test.md）。実際の X アカウントが要るのでユーザーが行う
-- [x] 計画3：本棚画面（`docs/superpowers/plans/2026-10-02-twittana-c-shelf.md`）
-- [ ] 計画4：AI 分類・言語・公開準備（`docs/superpowers/plans/2026-10-02-twittana-d-ai-release.md`）
+- [x] 計画1〜4（`docs/superpowers/plans/`）
+- [ ] 手での確認（`docs/manual-test.md` の全表）。実際の X アカウントが要るのでユーザーが行う
+- [ ] 実際の X の返事を匿名化してテスト用データにする（`docs/maintenance.md`）。ユーザーの X アカウントが要る
 - [ ] 計画5：本物のブラウザでのつなぎ確認（`docs/superpowers/plans/2026-10-02-twittana-e-e2e.md`）
 
 ## あとで（第1弾に入れない）
@@ -22,3 +20,5 @@
 - ライセンス（公開リポジトリ。付けなければ「見られるが再利用は不可」のまま）
 - 寄付の受け皿（Ko-fi など）の URL
 - ストア公開に使う Google アカウント（開発者登録料 5 ドル、1 回のみ）
+- GitHub Pages を有効にする（リポジトリの Settings → Pages → Deploy from a branch → `main` / `/docs`）。プライバシーポリシーの URL がこれで開くようになる
+- ストアに出すスクリーンショット 4 枚（`docs/store/listing.md`）

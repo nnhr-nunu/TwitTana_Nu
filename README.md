@@ -22,6 +22,8 @@ npm run build
 
 テストや型チェックが `.wxt/tsconfig.json` が無いと言って落ちるときは、`npx wxt prepare` を一度実行する。
 
+アイコンを描き直したら `npm run icons`。X の仕様が変わったときは [`docs/maintenance.md`](./docs/maintenance.md)。
+
 ## 状態
 
-設計中。決まったことと次の作業は [`task.md`](./task.md)、守る制約は [`AGENTS.md`](./AGENTS.md)。
+第1弾を実装済み（公開前の確認中）。決まったことと次の作業は [`task.md`](./task.md)、守る制約は [`AGENTS.md`](./AGENTS.md)。
