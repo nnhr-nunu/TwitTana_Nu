@@ -11,7 +11,8 @@
     "postinstall": "wxt prepare",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "icons": "node scripts/make-icons.mjs"
   },
   "dependencies": {
     "dexie": "^4.4.6",
@@ -30,6 +31,7 @@
     "eslint": "^10.11.0",
     "fake-indexeddb": "^6.2.5",
     "happy-dom": "^20.14.5",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4.3.3",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.71.0",
