@@ -7,6 +7,7 @@
 - [x] 計画1〜4（`docs/superpowers/plans/`）
 - [ ] 手での確認（`docs/manual-test.md` の全表）。実際の X アカウントが要るのでユーザーが行う
 - [ ] 実際の X の返事を匿名化してテスト用データにする（`docs/maintenance.md`）。ユーザーの X アカウントが要る
+- [ ] 計画6：見直しで見つかった不具合の修正（`docs/superpowers/plans/2026-10-02-twittana-f-review-fixes.md`）
 - [ ] 計画5：本物のブラウザでのつなぎ確認（`docs/superpowers/plans/2026-10-02-twittana-e-e2e.md`）
 
 ## あとで（第1弾に入れない）
