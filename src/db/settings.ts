@@ -1,4 +1,4 @@
-import { DEFAULT_SETTINGS, type Settings } from "../core/types";
+import { DEFAULT_SETTINGS, type ParseHealth, type Settings } from "../core/types";
 import type { TwitTanaDB } from "./schema";
 
 const KEY = "settings";
@@ -22,5 +22,13 @@ export async function bumpFoldersVersion(db: TwitTanaDB): Promise<number> {
     const v = (await getSettings(db)).foldersVersion + 1;
     await updateSettings(db, { foldersVersion: v });
     return v;
+  });
+}
+
+/** 読み取りの調子を、読んで書くまでを 1 つのトランザクションで更新する（同時の更新で消えないように） */
+export async function updateParseHealth(db: TwitTanaDB, update: (h: ParseHealth) => ParseHealth): Promise<void> {
+  await db.transaction("rw", db.kv, async () => {
+    const { parseHealth } = await getSettings(db);
+    await updateSettings(db, { parseHealth: update(parseHealth) });
   });
 }

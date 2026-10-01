@@ -25,13 +25,14 @@ export function createHookCore(cache: RecentPosts = new RecentPosts()): HookCore
       const posts = result.posts.map(clampCaptured);
       cache.add(posts);
       const out: HookMessage[] = [];
-      if (result.skipped > 0 && (bookmarkList || posts.length === 0)) {
-        out.push({ source: HOOK_SOURCE, type: "parse-error", op });
-      }
       if (bookmarkList) {
         for (let i = 0; i < posts.length; i += MAX_POSTS_PER_MESSAGE) {
           out.push({ source: HOOK_SOURCE, type: "bookmarks-seen", posts: posts.slice(i, i + MAX_POSTS_PER_MESSAGE) });
         }
+      }
+      // 保存の「成功」より後に「一部だけ読めなかった」を出す（警告が直後の成功で消えないように）
+      if (result.skipped > 0 && (bookmarkList || posts.length === 0)) {
+        out.push({ source: HOOK_SOURCE, type: "parse-error", op });
       }
       return out;
     },
