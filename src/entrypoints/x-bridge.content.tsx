@@ -7,7 +7,7 @@ import { anchorFromRect, createStore } from "../bridge/store";
 import { hasParseWarning } from "../core/health";
 import { findBookmarkButton, partialPost, postIdFromArticle, readPostFromArticle } from "../x/dom-read";
 import { setLanguage } from "../i18n";
-import { isHookMessage, type HookMessage } from "../x/messages";
+import { isHookMessage, splitValidPosts, type HookMessage } from "../x/messages";
 
 const BOOKMARKS_PATH = /^\/i\/bookmarks(\/|$)/;
 const CLICK_MEMORY_MS = 5000;
@@ -67,14 +67,16 @@ export default defineContentScript({
     const onHook = async (m: HookMessage) => {
       switch (m.type) {
         case "bookmarks-seen": {
-          const res = await savePostsQueued(m.posts);
-          if (res) sessionCount += m.posts.length;
+          const { valid } = splitValidPosts(m.posts);
+          const res = valid.length > 0 ? await savePostsQueued(valid) : null;
+          if (res) sessionCount += valid.length;
           await refreshCounter();
           return;
         }
         case "bookmark-added": {
           const click = recentClickFor(m.postId);
-          const post = m.post ?? (click?.article ? readPostFromArticle(click.article, m.postId) : partialPost(m.postId));
+          const fromHook = splitValidPosts(m.post ? [m.post] : []).valid[0];
+          const post = fromHook ?? (click?.article ? readPostFromArticle(click.article, m.postId) : partialPost(m.postId));
           await savePostsQueued([post]);
           const picker = await sendToBackground<"get-picker-state">({ type: "get-picker-state", postId: m.postId });
           setLanguage(picker.language);

@@ -1,3 +1,4 @@
+import { clampCaptured } from "../core/post-shape";
 import { bookmarkMutation, isBookmarkListOp, tweetIdFromBody } from "./graphql";
 import { HOOK_SOURCE, MAX_POSTS_PER_MESSAGE, type HookMessage } from "./messages";
 import { extractPosts, type ExtractResult } from "./parse";
@@ -21,14 +22,15 @@ export function createHookCore(cache: RecentPosts = new RecentPosts()): HookCore
       } catch {
         return [{ source: HOOK_SOURCE, type: "parse-error", op }];
       }
-      cache.add(result.posts);
+      const posts = result.posts.map(clampCaptured);
+      cache.add(posts);
       const out: HookMessage[] = [];
-      if (result.skipped > 0 && (bookmarkList || result.posts.length === 0)) {
+      if (result.skipped > 0 && (bookmarkList || posts.length === 0)) {
         out.push({ source: HOOK_SOURCE, type: "parse-error", op });
       }
       if (bookmarkList) {
-        for (let i = 0; i < result.posts.length; i += MAX_POSTS_PER_MESSAGE) {
-          out.push({ source: HOOK_SOURCE, type: "bookmarks-seen", posts: result.posts.slice(i, i + MAX_POSTS_PER_MESSAGE) });
+        for (let i = 0; i < posts.length; i += MAX_POSTS_PER_MESSAGE) {
+          out.push({ source: HOOK_SOURCE, type: "bookmarks-seen", posts: posts.slice(i, i + MAX_POSTS_PER_MESSAGE) });
         }
       }
       return out;

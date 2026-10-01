@@ -1,3 +1,4 @@
+import { isCapturedPostShape } from "./post-shape";
 import type { Folder, Post, Rule } from "./types";
 
 export const EXPORT_APP = "twittana";
@@ -62,31 +63,20 @@ function isRule(v: unknown): boolean {
 }
 
 function isPost(v: unknown): boolean {
-  if (!isObj(v)) return false;
-  const a = v.author;
-  const r = v.review;
+  if (!isCapturedPostShape(v)) return false;
+  const p = v as unknown as Obj;
+  const r = p.review;
   return (
-    isStr(v.id) &&
-    isStr(v.url) &&
-    isStr(v.text) &&
-    isStr(v.postedAt) &&
-    isStr(v.capturedAt) &&
-    isObj(a) &&
-    isStr(a.id) &&
-    isStr(a.handle) &&
-    isStr(a.name) &&
-    isStr(a.avatarUrl) &&
-    Array.isArray(v.media) &&
-    Array.isArray(v.links) &&
-    Array.isArray(v.hashtags) &&
-    v.hashtags.every(isStr) &&
-    Array.isArray(v.folders) &&
-    v.folders.every((f) => isObj(f) && isStr(f.folderId) && ASSIGNED_BY.includes(f.by as string)) &&
-    isBool(v.sortedByUser) &&
-    isBool(v.removedOnX) &&
-    isBool(v.hidden) &&
+    isStr(p.capturedAt) &&
+    Array.isArray(p.folders) &&
+    p.folders.every((f) => isObj(f) && isStr(f.folderId) && ASSIGNED_BY.includes(f.by as string)) &&
+    isBool(p.sortedByUser) &&
+    isBool(p.removedOnX) &&
+    isBool(p.hidden) &&
+    (p.aiCheckedFoldersVersion === undefined || isNum(p.aiCheckedFoldersVersion)) &&
     isObj(r) &&
-    isNum(r.count)
+    isNum(r.count) &&
+    (r.lastAt === undefined || isStr(r.lastAt))
   );
 }
 
