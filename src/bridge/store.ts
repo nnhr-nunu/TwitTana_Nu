@@ -39,3 +39,9 @@ export function anchorFromRect(
   const left = Math.min(Math.max(GAP, rect.left - PICKER_WIDTH / 2), viewport.width - PICKER_WIDTH - GAP);
   return { top, left };
 }
+
+/** メニューの選択状態を更新する。返事が届くまでに別の投稿のメニューに変わっていたら何もしない */
+export function withPickerSelection(s: BridgeState, postId: string, selected: string[]): BridgeState {
+  if (!s.picker || s.picker.postId !== postId) return s;
+  return { ...s, picker: { ...s.picker, selected } };
+}
