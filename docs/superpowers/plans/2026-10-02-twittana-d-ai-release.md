@@ -1786,6 +1786,8 @@ console.log(`匿名化して ${output} に書き出しました。中身に個�
 
 `package.json` の `scripts` に `"anonymize": "node scripts/anonymize-fixture.ts"` を足す。
 
+Run: `npm install -D @types/node`（`scripts/anonymize-fixture.ts` の `node:fs/promises` と `process` を型チェックするため。既に入っていれば不要）
+
 `tsconfig.json` の `compilerOptions` に `"allowImportingTsExtensions": true` を足す（`scripts/anonymize-fixture.ts` が `.ts` 付きで import するため）。
 
 `src/entrypoints/x-hook.content.ts` の `handle` の中、`readJson().then(` の成功側を次に置き換える（`isBookmarkListOp` を `../x/graphql` から import する）:
