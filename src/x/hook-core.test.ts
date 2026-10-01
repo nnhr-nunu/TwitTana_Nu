@@ -48,4 +48,15 @@ describe("createHookCore", () => {
     const msgs = createHookCore().onResponse("Bookmarks", bookmarksResponse(entries));
     expect(msgs.map((m) => (m.type === "bookmarks-seen" ? m.posts.length : 0))).toEqual([500, 1]);
   });
+
+  it("一部だけ読めなかったら、保存のあとに parse-error を出す（警告が成功で上書きされないように）", () => {
+    const msgs = createHookCore().onResponse(
+      "Bookmarks",
+      bookmarksResponse([
+        { tweet: rawTweet({ id: ID }), sortIndex: "9" },
+        { tweet: { __typename: "Tweet", rest_id: "1" }, sortIndex: "8" },
+      ]),
+    );
+    expect(msgs.map((m) => m.type)).toEqual(["bookmarks-seen", "parse-error"]);
+  });
 });

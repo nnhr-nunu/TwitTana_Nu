@@ -1,7 +1,7 @@
 import { createFolder, FolderNameError, listFolders } from "../db/folders";
 import { addToFolder, markRemovedOnX, removeFromFolder, saveCaptured } from "../db/posts";
 import type { TwitTanaDB } from "../db/schema";
-import { getSettings, updateSettings } from "../db/settings";
+import { getSettings, updateParseHealth } from "../db/settings";
 import type { BgRequest, BgResponseMap } from "./protocol";
 
 async function selectedFolders(db: TwitTanaDB, postId: string): Promise<string[]> {
@@ -13,20 +13,15 @@ export async function handleRequest(db: TwitTanaDB, req: BgRequest, now: string)
   switch (req.type) {
     case "save-posts": {
       const saved = await saveCaptured(db, req.posts, { now, bookmarked: true });
-      if (saved.length > 0) {
-        const { parseHealth } = await getSettings(db);
-        await updateSettings(db, { parseHealth: { ...parseHealth, lastOkAt: now } });
-      }
+      if (saved.length > 0) await updateParseHealth(db, (h) => ({ ...h, lastOkAt: now }));
       return { saved: saved.length, total: await db.posts.count() };
     }
     case "mark-removed":
       await markRemovedOnX(db, req.postId);
       return { ok: true };
-    case "report-parse-error": {
-      const { parseHealth } = await getSettings(db);
-      await updateSettings(db, { parseHealth: { ...parseHealth, lastErrorAt: now, lastErrorOp: req.op } });
+    case "report-parse-error":
+      await updateParseHealth(db, (h) => ({ ...h, lastErrorAt: now, lastErrorOp: req.op }));
       return { ok: true };
-    }
     case "get-picker-state": {
       const [settings, folders, selected] = await Promise.all([getSettings(db), listFolders(db), selectedFolders(db, req.postId)]);
       return { enabled: settings.pickerOnBookmark, folders, selected, language: settings.language };
