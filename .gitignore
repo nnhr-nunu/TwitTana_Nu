@@ -1,0 +1,16 @@
+# dependencies
+node_modules/
+
+# build output
+dist/
+*.zip
+
+# testing
+coverage/
+
+# env
+.env*
+
+# misc
+.DS_Store
+*.log
