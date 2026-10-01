@@ -10,7 +10,7 @@
 
 **Spec:** [`docs/superpowers/specs/2026-10-02-twittana-design.md`](../specs/2026-10-02-twittana-design.md)（8 章・9 章の手動・13 章の「X の画面を壊さない」）
 
-**前提:** 計画1〜4 が完了していること。
+**前提:** 計画1〜4 と計画6（見直しの修正）が完了していること。計画6で x.com 上の画面の Shadow DOM を閉じた（ページ側から読めない＝Playwright からも探せない）ので、E2E 用のビルドだけ環境変数 `WXT_E2E=1` で開く。ビルドは Playwright の globalSetup が行う。
 
 ## Global Constraints
 
@@ -30,7 +30,7 @@
 ### Task 1: 土台とブクマ画面の取り込み
 
 **Files:**
-- Create: `playwright.config.ts`、`e2e/fixtures.ts`、`e2e/fake-x.ts`、`e2e/capture.spec.ts`
+- Create: `playwright.config.ts`、`e2e/global-setup.ts`、`e2e/fixtures.ts`、`e2e/fake-x.ts`、`e2e/capture.spec.ts`
 - Modify: `vitest.config.ts`（`e2e/` を除く）、`package.json`（`e2e` スクリプト）、`.gitignore`、`eslint.config.mjs`
 
 - [ ] **Step 1: 依存と設定**
@@ -51,11 +51,23 @@ import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
   testDir: "e2e",
+  globalSetup: "./e2e/global-setup.ts",
   timeout: 60_000,
   workers: 1,
   reporter: "list",
   use: { trace: "retain-on-failure" },
 });
+```
+
+`e2e/global-setup.ts`:
+
+```ts
+import { execSync } from "node:child_process";
+
+/** E2E 用に拡張をビルドする。WXT_E2E=1 のときだけ x.com 上の画面の Shadow DOM を開く（テストから探せるように） */
+export default function globalSetup(): void {
+  execSync("npx wxt build", { stdio: "inherit", env: { ...process.env, WXT_E2E: "1" } });
+}
 ```
 
 `vitest.config.ts` を次にする（`e2e/` の `*.spec.ts` を Vitest が拾わないように）:
@@ -70,7 +82,9 @@ export default defineConfig({
 });
 ```
 
-`package.json` の `scripts` に `"e2e": "wxt build && playwright test"` を足す。
+`package.json` の `scripts` に `"e2e": "playwright test"` を足す（ビルドは globalSetup が行う）。
+
+（`import.meta.env.WXT_E2E` が E2E のビルドで `"1"` にならず、Shadow DOM の中が探せないときは、WXT が `WXT_` で始まる環境変数を `import.meta.env` に渡しているか確かめる。渡っていなければ `wxt.config.ts` の `vite` に `define: { "import.meta.env.WXT_E2E": JSON.stringify(process.env.WXT_E2E ?? "") }` を足す）
 
 `.gitignore` の末尾に足す:
 
@@ -269,7 +283,7 @@ Expected: PASS（2 件）。落ちたら Task 1 Step 4 と同じ手順で原因�
 `README.md` の「## 開発」の「テスト:」の行の次に足す:
 
 ```markdown
-ブラウザでのつなぎ確認（偽の X ページを使い、本物の x.com にはつながない）: `npm run e2e`。初回だけ `npx playwright install chromium` が要る。
+ブラウザでのつなぎ確認（偽の X ページを使い、本物の x.com にはつながない）: `npm run e2e`。初回だけ `npx playwright install chromium` が要る。E2E は `.output/chrome-mv3` をテスト用の設定でビルドし直すので、終わったら Chrome で使う前に `npm run build` し直す。
 ```
 
 `task.md` の「今やっていること」に `- [x] 計画5：E2E（docs/superpowers/plans/2026-10-02-twittana-e-e2e.md）` を足す。
