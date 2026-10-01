@@ -36,4 +36,11 @@ describe("parseImport の失敗", () => {
   it("配列でない", () => {
     expect(parseImport(JSON.stringify({ app: "twittana", schemaVersion: 1, exportedAt: "x", folders: {}, rules: [], posts: [] }))).toEqual({ ok: false, error: "invalid-shape" });
   });
+  it("形が違う（画像の要素が null・並び値が数値・画像が X 以外のサーバー）", () => {
+    const base = { app: "twittana", schemaVersion: 1, exportedAt: "x", folders: [], rules: [] };
+    expect(parseImport(JSON.stringify({ ...base, posts: [{ ...makePost(), media: [null] }] }))).toEqual({ ok: false, error: "invalid-shape" });
+    expect(parseImport(JSON.stringify({ ...base, posts: [{ ...makePost(), bookmarkOrder: 5 }] }))).toEqual({ ok: false, error: "invalid-shape" });
+    const tracking = makePost({ author: { id: "u", handle: "h", name: "n", avatarUrl: "https://tracker.example/a.png" } });
+    expect(parseImport(JSON.stringify({ ...base, posts: [tracking] }))).toEqual({ ok: false, error: "invalid-shape" });
+  });
 });
