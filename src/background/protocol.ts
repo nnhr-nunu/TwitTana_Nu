@@ -1,4 +1,5 @@
 import type { CapturedPost, Folder, ParseHealth } from "../core/types";
+import type { LanguageSetting } from "../i18n";
 
 /** 橋渡し係（x.com のページ内）から裏方への依頼 */
 export type BgRequest =
@@ -11,7 +12,7 @@ export type BgRequest =
   | { type: "get-stats" }
   | { type: "refresh-badge" };
 
-export type PickerState = { enabled: boolean; folders: Folder[]; selected: string[] };
+export type PickerState = { enabled: boolean; folders: Folder[]; selected: string[]; language: LanguageSetting };
 
 export type BgResponseMap = {
   "save-posts": { saved: number; total: number };
@@ -20,7 +21,7 @@ export type BgResponseMap = {
   "get-picker-state": PickerState;
   "set-folder": { selected: string[] };
   "create-folder": { ok: true; folder: Folder; selected: string[] } | { ok: false; error: "empty" | "duplicate" };
-  "get-stats": { total: number; health: ParseHealth };
+  "get-stats": { total: number; health: ParseHealth; language: LanguageSetting };
   "refresh-badge": { ok: true };
 };
 

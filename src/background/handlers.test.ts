@@ -42,7 +42,7 @@ describe("handleRequest", () => {
     const f = await createFolder(db, { name: "A" }, NOW);
     await db.posts.put(makePost({ id: "1", folders: [{ folderId: f.id, by: "rule" }] }));
     await updateSettings(db, { pickerOnBookmark: false });
-    expect(await handleRequest(db, { type: "get-picker-state", postId: "1" }, NOW)).toEqual({ enabled: false, folders: [f], selected: [f.id] });
+    expect(await handleRequest(db, { type: "get-picker-state", postId: "1" }, NOW)).toEqual({ enabled: false, folders: [f], selected: [f.id], language: "auto" });
   });
 
   it("set-folder: 手で出し入れし、入っているフォルダを返す", async () => {
@@ -65,6 +65,6 @@ describe("handleRequest", () => {
 
   it("get-stats: 全件数と読み取りの調子", async () => {
     await db.posts.bulkPut([makePost({ id: "1" }), makePost({ id: "2" })]);
-    expect(await handleRequest(db, { type: "get-stats" }, NOW)).toEqual({ total: 2, health: {} });
+    expect(await handleRequest(db, { type: "get-stats" }, NOW)).toEqual({ total: 2, health: {}, language: "auto" });
   });
 });

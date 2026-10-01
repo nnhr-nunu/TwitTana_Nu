@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import type { Folder } from "../../core/types";
+import { t } from "../../i18n";
 
 export const PICKER_AUTO_CLOSE_MS = 8000;
 export type PickerAnchor = { top: number; left: number } | null;
@@ -13,11 +14,6 @@ export type FolderPickerProps = {
   onToggle: (folderId: string, on: boolean) => void;
   onCreate: (name: string) => Promise<CreateFolderError | null>;
   onClose: () => void;
-};
-
-const ERROR_TEXT: Record<CreateFolderError, string> = {
-  empty: "名前を入れてください",
-  duplicate: "同じ名前のフォルダがあります",
 };
 
 /** ブクマした瞬間に出す、フォルダを選ぶ小さなメニュー */
@@ -46,19 +42,19 @@ export function FolderPicker({ folders, selected, anchor, onToggle, onCreate, on
       className={anchor ? "tt-picker" : "tt-picker tt-picker--corner"}
       style={anchor ? { top: anchor.top, left: anchor.left } : undefined}
       role="dialog"
-      aria-label="ツイッ棚のフォルダ"
+      aria-label={t("picker.dialog")}
       onPointerEnter={touch}
       onPointerDown={touch}
       onKeyDown={touch}
     >
       <div className="tt-picker__head">
-        <span>ツイッ棚に整理</span>
-        <button type="button" className="tt-picker__close" aria-label="閉じる" onClick={onClose}>
+        <span>{t("picker.title")}</span>
+        <button type="button" className="tt-picker__close" aria-label={t("picker.close")} onClick={onClose}>
           ×
         </button>
       </div>
       {folders.length === 0 ? (
-        <p className="tt-picker__empty">フォルダがまだありません</p>
+        <p className="tt-picker__empty">{t("picker.empty")}</p>
       ) : (
         <ul className="tt-picker__list">
           {folders.map((f) => {
@@ -88,14 +84,14 @@ export function FolderPicker({ folders, selected, anchor, onToggle, onCreate, on
             touch();
             setName(e.target.value);
           }}
-          placeholder="新しいフォルダ"
-          aria-label="新しいフォルダの名前"
+          placeholder={t("picker.newPlaceholder")}
+          aria-label={t("picker.newLabel")}
         />
-        <button type="submit">追加</button>
+        <button type="submit">{t("picker.add")}</button>
       </form>
       {error && (
         <p className="tt-picker__error" role="alert">
-          {ERROR_TEXT[error]}
+          {t(error === "empty" ? "folders.error.empty" : "folders.error.duplicate")}
         </p>
       )}
     </div>

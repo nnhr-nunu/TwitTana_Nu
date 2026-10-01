@@ -5,7 +5,7 @@ import { hasParseWarning } from "../core/health";
 import { localDateString } from "../core/review";
 import { exportAll, importFile } from "../db/backup";
 import { updateSettings } from "../db/settings";
-import { t } from "../i18n";
+import { t, type LanguageSetting } from "../i18n";
 import { usePostCount, useSettings } from "./data";
 import { useDb } from "./db-context";
 import { useRun } from "./errors";
@@ -77,6 +77,18 @@ export function SettingsPanel() {
           }}
           className="w-20 rounded-lg border border-amber-300 bg-white px-2 py-1 dark:border-stone-600 dark:bg-stone-900"
         />
+      </label>
+      <label className="flex items-center gap-2">
+        {t("settings.language")}
+        <select
+          value={settings.language}
+          onChange={(e) => void run(() => updateSettings(db, { language: e.target.value as LanguageSetting }))}
+          className="rounded-lg border border-amber-300 bg-white px-2 py-1 dark:border-stone-600 dark:bg-stone-900"
+        >
+          <option value="auto">{t("settings.language.auto")}</option>
+          <option value="ja">{t("settings.language.ja")}</option>
+          <option value="en">{t("settings.language.en")}</option>
+        </select>
       </label>
       <section className="space-y-2">
         <h2 className="text-lg font-bold">{t("settings.backup")}</h2>

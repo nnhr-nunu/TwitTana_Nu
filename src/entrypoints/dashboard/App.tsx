@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { requestBadgeRefresh } from "../../dashboard/badge";
+import { useSettings } from "../../dashboard/data";
 import { ErrorProvider } from "../../dashboard/errors";
 import { Organize } from "../../dashboard/Organize";
 import { SettingsPanel } from "../../dashboard/SettingsPanel";
 import { Shelf } from "../../dashboard/Shelf";
-import { t, type MessageKey } from "../../i18n";
+import { setLanguage, t, type MessageKey } from "../../i18n";
 
 type Tab = "shelf" | "organize" | "settings";
 const TABS: { id: Tab; label: MessageKey }[] = [
@@ -16,6 +17,11 @@ const TABS: { id: Tab; label: MessageKey }[] = [
 export function App() {
   const [tab, setTab] = useState<Tab>("shelf");
   const [error, setError] = useState<string | null>(null);
+  const settings = useSettings();
+  if (settings) {
+    const language = setLanguage(settings.language);
+    document.documentElement.lang = language;
+  }
 
   useEffect(() => {
     requestBadgeRefresh();
