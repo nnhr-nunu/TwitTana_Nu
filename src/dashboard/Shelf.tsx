@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { selectPosts, SORT_KEYS, viewCounts, type SortKey, type View } from "../core/views";
 import { addToFolder, removeFromFolder, setHidden } from "../db/posts";
 import { t } from "../i18n";
+import { AiStatus } from "./AiStatus";
 import { BulkBar } from "./BulkBar";
 import { useFolders, usePosts } from "./data";
 import { useDb } from "./db-context";
@@ -52,6 +53,7 @@ export function Shelf() {
       <Sidebar view={view} onChange={changeView} counts={counts} folders={folders} />
       <main className="min-w-0 flex-1 space-y-4">
         <ReviewStrip posts={postMap} folders={folders} />
+        <AiStatus />
         <div className="flex flex-wrap items-center gap-2">
           <input
             type="search"

@@ -6,6 +6,7 @@ import { localDateString } from "../core/review";
 import { exportAll, importFile } from "../db/backup";
 import { updateSettings } from "../db/settings";
 import { t, type LanguageSetting } from "../i18n";
+import { AiSettings } from "./AiSettings";
 import { usePostCount, useSettings } from "./data";
 import { useDb } from "./db-context";
 import { useRun } from "./errors";
@@ -90,6 +91,7 @@ export function SettingsPanel() {
           <option value="en">{t("settings.language.en")}</option>
         </select>
       </label>
+      <AiSettings />
       <section className="space-y-2">
         <h2 className="text-lg font-bold">{t("settings.backup")}</h2>
         <div className="flex flex-wrap items-center gap-3">
