@@ -7,6 +7,8 @@ export const ja = {
   "tab.settings": "設定",
   "error.generic": "保存に失敗しました（{message}）。念のため「設定」の「書き出す」でデータを退避してください。",
   "error.close": "閉じる",
+  "error.render": "表示中に問題が起きました（{message}）。読み込んだデータが壊れているかもしれません。別のタブに移るか、「設定」タブで書き出して退避してください。",
+  "error.retry": "もう一度表示する",
   "view.all": "すべて",
   "view.unsorted": "未整理",
   "view.ai": "AI が入れたもの",

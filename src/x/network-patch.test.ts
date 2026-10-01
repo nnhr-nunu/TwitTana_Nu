@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { patchFetch } from "./network-patch";
 
 const tick = () => new Promise((r) => setTimeout(r, 0));
@@ -53,5 +53,23 @@ describe("patchFetch", () => {
     expect(await res.text()).toBe("<html>");
     await tick();
     expect(failed).toBe(true);
+  });
+
+  it("見張らない URL は知らせず、複製もしない", async () => {
+    const target = fakeTarget('{"a":1}');
+    let called = false;
+    patchFetch(
+      target,
+      () => {
+        called = true;
+      },
+      (url) => url.includes("/i/api/graphql/"),
+    );
+    const clone = vi.spyOn(Response.prototype, "clone");
+    const res = await target.fetch("https://video.twimg.com/v.mp4");
+    expect(await res.json()).toEqual({ a: 1 });
+    expect(called).toBe(false);
+    expect(clone).not.toHaveBeenCalled();
+    clone.mockRestore();
   });
 });

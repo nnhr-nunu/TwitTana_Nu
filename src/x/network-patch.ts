@@ -10,14 +10,17 @@ function urlOf(input: RequestInfo | URL): string {
   return input.url;
 }
 
-/** fetch を包む。X の画面に渡す返事には手を加えない */
-export function patchFetch(target: { fetch: typeof fetch }, handle: NetworkHandler): void {
+/** fetch を包む。shouldWatch が true の URL だけ見る（それ以外は複製もしない）。X の画面に渡す返事には手を加えない */
+export function patchFetch(target: { fetch: typeof fetch }, handle: NetworkHandler, shouldWatch: (url: string) => boolean = () => true): void {
   const original = target.fetch;
   target.fetch = async function patchedFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
     const res = await original.call(target, input, init);
     try {
-      const copy = res.clone();
-      handle(urlOf(input), init?.body, res.ok, () => copy.json());
+      const url = urlOf(input);
+      if (shouldWatch(url)) {
+        const copy = res.clone();
+        handle(url, init?.body, res.ok, () => copy.json());
+      }
     } catch {
       // X の画面は壊さない
     }

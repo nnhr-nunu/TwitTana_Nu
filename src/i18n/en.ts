@@ -9,6 +9,8 @@ export const en: Record<keyof typeof ja, string> = {
   "tab.settings": "Settings",
   "error.generic": "Could not save ({message}). To be safe, back up your data with “Export” in Settings.",
   "error.close": "Close",
+  "error.render": "Something went wrong while showing this page ({message}). Imported data may be broken. Switch tabs, or export a backup from Settings.",
+  "error.retry": "Try again",
   "view.all": "All",
   "view.unsorted": "Unsorted",
   "view.ai": "Sorted by AI",
