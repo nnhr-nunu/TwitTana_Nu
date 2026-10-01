@@ -20,6 +20,8 @@ npm run build
 
 テスト: `npm test` / 型チェック: `npm run typecheck` / lint: `npm run lint`
 
+ブラウザでのつなぎ確認（偽の X ページを使い、本物の x.com にはつながない）: `npm run e2e`。初回だけ `npx playwright install chromium` が要る。E2E は `.output/chrome-mv3` をテスト用の設定でビルドし直すので、終わったら Chrome で使う前に `npm run build` し直す。
+
 テストや型チェックが `.wxt/tsconfig.json` が無いと言って落ちるときは、`npx wxt prepare` を一度実行する。
 
 アイコンを描き直したら `npm run icons`。X の仕様が変わったときは [`docs/maintenance.md`](./docs/maintenance.md)。
