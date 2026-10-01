@@ -18,3 +18,7 @@ coverage/
 # wxt
 .output/
 .wxt/
+
+# playwright
+test-results/
+playwright-report/

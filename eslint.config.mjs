@@ -2,7 +2,7 @@ import js from "@eslint/js";
 import tseslint from "typescript-eslint";
 
 export default [
-  { ignores: [".output/**", ".wxt/**", "node_modules/**"] },
+  { ignores: [".output/**", ".wxt/**", "node_modules/**", "test-results/**", "playwright-report/**"] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   // 開発用のスクリプトは Node で動く
