@@ -28,6 +28,9 @@ export async function completeReview(db: TwitTanaDB, postId: string, today: stri
   });
 }
 
+/** 今日の残り件数（非表示にした投稿・消えた投稿は数えない） */
 export async function remainingReviewCount(db: TwitTanaDB, today: string): Promise<number> {
-  return remainingReviewIds(await ensureTodayReview(db, today)).length;
+  const ids = remainingReviewIds(await ensureTodayReview(db, today));
+  const posts = await db.posts.bulkGet(ids);
+  return posts.filter((p) => p !== undefined && !p.hidden).length;
 }

@@ -37,7 +37,7 @@ export default defineContentScript({
       );
     };
 
-    patchFetch(window, handle);
+    patchFetch(window, handle, (url) => graphqlOperation(url) !== null);
     patchXhr(window, handle, (url) => graphqlOperation(url) !== null);
   },
 });

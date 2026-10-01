@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { requestBadgeRefresh } from "../../dashboard/badge";
+import { ErrorBoundary } from "../../dashboard/ErrorBoundary";
 import { useSettings } from "../../dashboard/data";
 import { ErrorProvider } from "../../dashboard/errors";
 import { Organize } from "../../dashboard/Organize";
@@ -58,7 +59,9 @@ export function App() {
           </div>
         )}
         <div className="mx-auto max-w-6xl px-6 py-6">
-          {tab === "shelf" ? <Shelf /> : tab === "organize" ? <Organize /> : <SettingsPanel />}
+          <ErrorBoundary resetKey={tab}>
+            {tab === "shelf" ? <Shelf /> : tab === "organize" ? <Organize /> : <SettingsPanel />}
+          </ErrorBoundary>
         </div>
       </div>
     </ErrorProvider>

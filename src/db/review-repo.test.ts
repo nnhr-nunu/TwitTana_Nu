@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { makePost } from "../test/factories";
 import { openTestDb } from "../test/db";
+import { setHidden } from "./posts";
 import { completeReview, ensureTodayReview, remainingReviewCount } from "./review-repo";
 import { updateSettings } from "./settings";
 
@@ -52,5 +53,12 @@ describe("completeReview", () => {
     const after = await completeReview(db, "not-today", "2026-10-02", "2026-10-02T09:10:00.000Z");
     expect(after.doneIds).toEqual([target]);
     expect((await db.posts.get(target))?.review.count).toBe(1);
+  });
+  it("今日の顔ぶれのうち、非表示にした投稿は残り件数に数えない", async () => {
+    await seed(5);
+    await updateSettings(db, { reviewPerDay: 2 });
+    const t = await ensureTodayReview(db, "2026-10-02");
+    await setHidden(db, [t.postIds[0] as string], true);
+    expect(await remainingReviewCount(db, "2026-10-02")).toBe(1);
   });
 });
