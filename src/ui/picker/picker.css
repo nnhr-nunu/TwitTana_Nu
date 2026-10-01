@@ -1,0 +1,130 @@
+.tt-picker,
+.tt-counter {
+  position: fixed;
+  z-index: 2147483647;
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #2b2118;
+  background: #fffaf3;
+  border: 1px solid #d9c7b0;
+  border-radius: 12px;
+  box-shadow: 0 6px 24px rgb(0 0 0 / 0.18);
+}
+
+.tt-picker {
+  width: 260px;
+  max-height: 240px;
+  overflow: auto;
+  padding: 10px 12px;
+}
+
+.tt-picker--corner,
+.tt-counter {
+  left: 16px;
+  bottom: 16px;
+}
+
+.tt-picker__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.tt-picker__close {
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  cursor: pointer;
+  color: inherit;
+}
+
+.tt-picker__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.tt-picker__chip {
+  border: 1px solid #c9b291;
+  border-radius: 999px;
+  padding: 3px 10px;
+  background: #ffffff;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+}
+
+.tt-picker__chip[aria-pressed="true"] {
+  background: #7c5a3a;
+  border-color: #7c5a3a;
+  color: #ffffff;
+}
+
+.tt-picker__empty {
+  margin: 0 0 8px;
+  color: #7a6a58;
+}
+
+.tt-picker__new {
+  display: flex;
+  gap: 6px;
+}
+
+.tt-picker__new input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid #d9c7b0;
+  border-radius: 8px;
+  padding: 4px 8px;
+  font: inherit;
+}
+
+.tt-picker__new button {
+  border: none;
+  border-radius: 8px;
+  padding: 4px 10px;
+  background: #7c5a3a;
+  color: #ffffff;
+  cursor: pointer;
+  font: inherit;
+}
+
+.tt-picker__error {
+  margin: 6px 0 0;
+  color: #b42318;
+}
+
+.tt-counter {
+  padding: 6px 12px;
+}
+
+.tt-counter__warn {
+  display: block;
+  margin-top: 2px;
+  color: #b42318;
+}
+
+@media (prefers-color-scheme: dark) {
+  .tt-picker,
+  .tt-counter {
+    color: #f3e9dc;
+    background: #2a221b;
+    border-color: #5a4836;
+  }
+  .tt-picker__chip,
+  .tt-picker__new input {
+    background: #1d1712;
+    color: #f3e9dc;
+    border-color: #5a4836;
+  }
+  .tt-picker__empty {
+    color: #b8a690;
+  }
+}
