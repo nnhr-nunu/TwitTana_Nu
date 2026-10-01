@@ -75,4 +75,30 @@ describe("Shelf", () => {
     const settings = await db.kv.get("settings");
     expect((settings?.value as { todayReview?: { date: string } }).todayReview?.date).toBe(localDateString(new Date()));
   });
+
+  it("操作して一覧から消えた投稿は、次のまとめて操作に含まれない", async () => {
+    await db.folders.bulkPut([
+      { id: "a", name: "ゲーム", description: "", order: 0, createdAt: "" },
+      { id: "b", name: "料理", description: "", order: 1, createdAt: "" },
+    ]);
+    await db.posts.bulkPut([
+      makePost({ id: "1", text: "一つ目", bookmarkOrder: "20", review: { count: 1, lastAt: "2026-01-01T00:00:00.000Z" } }),
+      makePost({ id: "5", text: "二つ目", bookmarkOrder: "10", review: { count: 1, lastAt: "2026-01-01T00:00:00.000Z" } }),
+    ]);
+    renderShelf();
+    fireEvent.click(await screen.findByRole("button", { name: /未整理/ }));
+    const list = await screen.findByRole("list", { name: "投稿の一覧" });
+    await waitFor(() => expect(within(list).getAllByRole("checkbox")).toHaveLength(2));
+    fireEvent.click(within(list).getAllByRole("checkbox")[0] as HTMLElement);
+    fireEvent.change(screen.getByLabelText("フォルダを選ぶ"), { target: { value: "a" } });
+    fireEvent.click(screen.getByRole("button", { name: "入れる" }));
+    await waitFor(() => expect(within(list).getAllByRole("checkbox")).toHaveLength(1));
+
+    fireEvent.click(within(list).getAllByRole("checkbox")[0] as HTMLElement);
+    expect(screen.getByText("1 件を選択中")).toBeTruthy();
+    fireEvent.change(screen.getByLabelText("フォルダを選ぶ"), { target: { value: "b" } });
+    fireEvent.click(screen.getByRole("button", { name: "入れる" }));
+    await waitFor(async () => expect((await db.posts.get("5"))?.folders).toEqual([{ folderId: "b", by: "manual" }]));
+    expect((await db.posts.get("1"))?.folders).toEqual([{ folderId: "a", by: "manual" }]);
+  });
 });

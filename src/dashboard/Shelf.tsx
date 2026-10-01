@@ -28,6 +28,7 @@ export function Shelf() {
   const [limit, setLimit] = useState(SHELF_PAGE_SIZE);
 
   const list = useMemo(() => selectPosts(posts ?? [], { view, query, sort }), [posts, view, query, sort]);
+  const visibleIds = useMemo(() => new Set(list.map((p) => p.id)), [list]);
   const counts = useMemo(() => viewCounts(posts ?? []), [posts]);
   const postMap = useMemo(() => new Map((posts ?? []).map((p) => [p.id, p])), [posts]);
   const folderMap = useMemo(() => new Map((folders ?? []).map((f) => [f.id, f])), [folders]);
@@ -46,7 +47,7 @@ export function Shelf() {
       else next.delete(id);
       return next;
     });
-  const ids = [...selected];
+  const ids = [...selected].filter((id) => visibleIds.has(id)); // 一覧から消えた投稿は操作しない
 
   return (
     <div className="flex gap-6">
@@ -75,9 +76,9 @@ export function Shelf() {
           </select>
           <span className="text-sm text-stone-500">{t("shelf.count", { count: list.length })}</span>
         </div>
-        {selected.size > 0 && (
+        {ids.length > 0 && (
           <BulkBar
-            count={selected.size}
+            count={ids.length}
             folders={folders}
             hiddenView={view.kind === "hidden"}
             onAdd={(folderId) => void run(() => addToFolder(db, ids, folderId))}
