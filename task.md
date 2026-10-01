@@ -22,8 +22,6 @@
 
 ## 保留（ユーザーが決める）
 
-- ライセンス（公開リポジトリ。付けなければ「見られるが再利用は不可」のまま）
-- 寄付の受け皿（Ko-fi など）の URL
+- 寄付は GitHub Sponsors に決定。ユーザーが申請し、承認されたら `src/config.ts` の `LINKS.donate` に `https://github.com/sponsors/nnhr-nunu` を入れ、`.github/FUNDING.yml`（`github: nnhr-nunu`）を足す
 - ストア公開に使う Google アカウント（開発者登録料 5 ドル、1 回のみ）
-- GitHub Pages を有効にする（リポジトリの Settings → Pages → Deploy from a branch → `main` / `/docs`）。プライバシーポリシーの URL がこれで開くようになる
 - ストアに出すスクリーンショット 4 枚（`docs/store/listing.md`）
