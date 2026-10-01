@@ -1,5 +1,5 @@
 import { defineContentScript } from "#imports";
-import { bookmarkMutation, graphqlOperation } from "../x/graphql";
+import { bookmarkMutation, graphqlOperation, isBookmarkListOp } from "../x/graphql";
 import { createHookCore } from "../x/hook-core";
 import { HOOK_SOURCE, type HookMessage } from "../x/messages";
 import { patchFetch, patchXhr, type NetworkHandler } from "../x/network-patch";
@@ -26,7 +26,13 @@ export default defineContentScript({
         return;
       }
       readJson().then(
-        (json) => post(core.onResponse(op, json)),
+        (json) => {
+          // 開発版だけ：localStorage に twittana:dump=1 があれば、ブクマ一覧の生データをコンソールに出す
+          if (import.meta.env.DEV && isBookmarkListOp(op) && window.localStorage.getItem("twittana:dump") === "1") {
+            console.debug("[twittana:raw]", op, JSON.stringify(json));
+          }
+          post(core.onResponse(op, json));
+        },
         () => post([{ source: HOOK_SOURCE, type: "parse-error", op }]),
       );
     };
