@@ -14,3 +14,7 @@ coverage/
 # misc
 .DS_Store
 *.log
+
+# wxt
+.output/
+.wxt/
