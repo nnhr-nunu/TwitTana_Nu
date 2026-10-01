@@ -7,9 +7,10 @@ export default defineConfig({
   modules: ["@wxt-dev/module-react"],
   vite: () => ({ plugins: [tailwindcss()] }),
   manifest: {
-    name: "ツイッ棚",
-    description: "Twitter（現 X）のブックマークを自分のフォルダに整理して見返す（非公式）",
+    name: "__MSG_extName__",
+    description: "__MSG_extDescription__",
+    default_locale: "ja",
     permissions: ["unlimitedStorage"],
-    action: { default_title: "ツイッ棚を開く" },
+    action: { default_title: "__MSG_actionTitle__" },
   },
 });

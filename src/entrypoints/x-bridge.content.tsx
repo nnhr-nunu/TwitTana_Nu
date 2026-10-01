@@ -6,6 +6,7 @@ import { BridgeApp, type BridgeActions } from "../bridge/BridgeApp";
 import { anchorFromRect, createStore } from "../bridge/store";
 import { hasParseWarning } from "../core/health";
 import { findBookmarkButton, partialPost, postIdFromArticle, readPostFromArticle } from "../x/dom-read";
+import { setLanguage } from "../i18n";
 import { isHookMessage, type HookMessage } from "../x/messages";
 
 const BOOKMARKS_PATH = /^\/i\/bookmarks(\/|$)/;
@@ -50,6 +51,7 @@ export default defineContentScript({
       }
       try {
         const stats = await sendToBackground<"get-stats">({ type: "get-stats" });
+        setLanguage(stats.language);
         store.set((s) => ({ ...s, counter: { sessionCount, total: stats.total, warning: hasParseWarning(stats.health) } }));
       } catch {
         store.set((s) => ({ ...s, counter: { sessionCount, total: null, warning: false } }));
@@ -75,6 +77,7 @@ export default defineContentScript({
           const post = m.post ?? (click?.article ? readPostFromArticle(click.article, m.postId) : partialPost(m.postId));
           await savePostsQueued([post]);
           const picker = await sendToBackground<"get-picker-state">({ type: "get-picker-state", postId: m.postId });
+          setLanguage(picker.language);
           if (!picker.enabled) return;
           const anchor = click ? anchorFromRect(click.rect, { width: window.innerWidth, height: window.innerHeight }) : null;
           store.set((s) => ({ ...s, picker: { postId: m.postId, anchor, folders: picker.folders, selected: picker.selected } }));

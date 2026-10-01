@@ -29,7 +29,7 @@ export async function handleRequest(db: TwitTanaDB, req: BgRequest, now: string)
     }
     case "get-picker-state": {
       const [settings, folders, selected] = await Promise.all([getSettings(db), listFolders(db), selectedFolders(db, req.postId)]);
-      return { enabled: settings.pickerOnBookmark, folders, selected };
+      return { enabled: settings.pickerOnBookmark, folders, selected, language: settings.language };
     }
     case "set-folder":
       if (req.on) await addToFolder(db, [req.postId], req.folderId);
@@ -44,8 +44,10 @@ export async function handleRequest(db: TwitTanaDB, req: BgRequest, now: string)
         if (e instanceof FolderNameError) return { ok: false, error: e.code };
         throw e;
       }
-    case "get-stats":
-      return { total: await db.posts.count(), health: (await getSettings(db)).parseHealth };
+    case "get-stats": {
+      const settings = await getSettings(db);
+      return { total: await db.posts.count(), health: settings.parseHealth, language: settings.language };
+    }
     case "refresh-badge":
       return { ok: true };
   }

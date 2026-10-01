@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import { t } from "../i18n";
 import { FolderPicker, type CreateFolderError } from "../ui/picker/FolderPicker";
 import type { BridgeStore } from "./store";
 
@@ -26,9 +27,9 @@ export function BridgeApp({ store, actions }: { store: BridgeStore; actions: Bri
       )}
       {state.counter && !state.picker && (
         <div className="tt-counter" role="status">
-          ツイッ棚：このページで {state.counter.sessionCount} 件取り込み
-          {state.counter.total !== null && `（全 ${state.counter.total} 件）`}
-          {state.counter.warning && <span className="tt-counter__warn">X の仕様が変わったようです。更新をお待ちください</span>}
+          {t("counter.text", { count: state.counter.sessionCount })}
+          {state.counter.total !== null && t("counter.total", { total: state.counter.total })}
+          {state.counter.warning && <span className="tt-counter__warn">{t("counter.warning")}</span>}
         </div>
       )}
     </>

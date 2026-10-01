@@ -2,6 +2,7 @@
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Folder } from "../../core/types";
+import { setLanguage } from "../../i18n";
 import { FolderPicker, PICKER_AUTO_CLOSE_MS, type FolderPickerProps } from "./FolderPicker";
 
 const folders: Folder[] = [
@@ -89,5 +90,18 @@ describe("FolderPicker", () => {
     const p = setup();
     fireEvent.click(screen.getByRole("button", { name: "閉じる" }));
     expect(p.onClose).toHaveBeenCalled();
+  });
+});
+
+describe("FolderPicker の言語", () => {
+  afterEach(() => {
+    setLanguage("ja");
+  });
+  it("英語にすると英語で出る", () => {
+    setLanguage("en");
+    setup({ folders: [] });
+    expect(screen.getByText("No folders yet")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Close" })).toBeTruthy();
+    expect(screen.getByLabelText("New folder name")).toBeTruthy();
   });
 });
