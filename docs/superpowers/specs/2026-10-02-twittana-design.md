@@ -92,9 +92,9 @@ x.com のページ
 | データの形・ルール判定・見返しの選び方・AI への指示文・書き出し形式 | `src/core/` | X にもブラウザにも依存しない純粋なロジック。第2弾でも使う | なし |
 | 読み取り係 | `src/x/` | X の通信データ → `Post`。**X の仕様変更で壊れるのはここだけにする** | `core` |
 | 保存の窓口 | `src/db/` | Dexie の表定義と、保存・取得の関数 | `core` |
-| 取り込み係・橋渡し係・裏方・本棚画面 | `entrypoints/`（WXT の入口） | 上の図のとおり | 上の 3 つ |
+| 取り込み係・橋渡し係・裏方・本棚画面 | `src/entrypoints/`（WXT の入口。`srcDir: "src"`） | 上の図のとおり | 上の 3 つ |
 | 画面部品 | `src/ui/` | 本棚画面とメニューで使う React 部品 | `core` |
-| 文言 | `locales/`（ja / en） | 画面の文言 | なし |
+| 文言 | `src/locales/`（ja / en） | 画面の文言 | なし |
 
 ## 7. データの形
 
@@ -111,7 +111,9 @@ type Post = {
   quoted?: { id: string; authorHandle: string; text: string };
   capturedAt: string;          // ツイッ棚に入った日時
   bookmarkOrder?: string;      // X のブクマ一覧での並び（新しいほど大きい）。並べ替え用
+  partial?: boolean;           // ID と URL しか分からなかった（中身はあとで埋める）
   folders: { folderId: string; by: "manual" | "rule" | "ai" }[];
+  sortedByUser: boolean;       // 利用者が手でフォルダを出し入れした。ルール・AI はこの投稿に手を出さない
   removedOnX: boolean;         // X でブクマ解除済み
   hidden: boolean;             // 「もう出さない」
   aiCheckedFoldersVersion?: number; // この版のフォルダ構成で AI が判定済み
@@ -160,7 +162,7 @@ type Settings = {
 
 ## 9. 振り分け
 
-優先順位は **手動 ＞ ルール ＞ AI**。手動で入れた投稿には、ルールも AI も手を出さない。
+優先順位は **手動 ＞ ルール ＞ AI**。利用者が一度でも手でフォルダを出し入れした投稿（`sortedByUser`）には、ルールも AI も手を出さない（外した操作も尊重する）。
 
 ### 手動
 
