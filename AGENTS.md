@@ -28,3 +28,8 @@ Windows の既定ターミナルは PowerShell。bash 形式の heredoc は使�
 - 完了タスク → `task.md` から削除（履歴は `git log`）
 - README は起動手順のみ。製品補足が必要なら `docs/product/`
 - 800 行を超えるファイルは責務単位で分割する
+
+## 層の決まり（どこを書き換えてよいか）
+- 事実（読み書きする）: task.md・AGENTS.md・docs/maintenance.md・docs/manual-test.md。済んだ節は docs/history/ へ移す（入口の task.md と AGENTS.md は 20KB まで）
+- 原本（書き換えない）: docs/history/ の記録・docs/privacy.html と docs/store/（公開・申請済みの文面）
+- 成果物（手で直さない。元かスクリプトを直して作り直す）: `dist/`・`.output/`・`.wxt/`・`test-results/`・`graphify-out/`（git の外）
